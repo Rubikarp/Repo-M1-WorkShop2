@@ -8,7 +8,7 @@ public class CourChunckProfileEditorWindow : EditorWindow
     CrChunkProfile currentChunk;
 
     SerializedObject serializedObject;
-    SerializedProperty gridProp;
+    static SerializedProperty gridProp;
     SerializedProperty widthProp, heightProp;
     SerializedProperty tileColorProp;
     SerializedProperty currentTileType;
@@ -83,55 +83,80 @@ public class CourChunckProfileEditorWindow : EditorWindow
         Rect nextRect = EditorGUILayout.GetControlRect();
 
         Rect area = new Rect(nextRect.x + totalWidth * marginRatio, nextRect.y, gridWidth, gridWidth);
-        EditorGUI.DrawRect(area, Color.gray);
+        EditorGUI.DrawRect(area, new Color(0.5f,0.5f,0.5f, 0.2f));
 
         if (currentChunk.width < 0) return;
         if (currentChunk.height < 0) return;
 
-        #region Draw Square Grid
-        float cellToSpaceRatio = 4f;
-        float totalCellWidth = gridWidth * (cellToSpaceRatio) / (cellToSpaceRatio + 1f);
-        float cellWidth = totalCellWidth / (float)currentChunk.width;
-        float totalSpaceWitdh = gridWidth - totalCellWidth;
-        float spaceWidth = totalSpaceWitdh / ((float)currentChunk.width + 1);
-        float curY = area.y + spaceWidth;
-
-        for (int y = 0; y < currentChunk.height; y++)
+        using (new GUILayout.VerticalScope(GUILayout.Height(area.height), GUILayout.Width(area.height)))
         {
-            float curX = area.x;
 
-            for (int x = 0; x < currentChunk.width; x++)
+            #region Draw Square Grid
+            float cellToSpaceRatio = 4f;
+            float totalCellWidth = gridWidth * (cellToSpaceRatio) / (cellToSpaceRatio + 1f);
+
+            float cellWidth = totalCellWidth / (float)heightProp.intValue;
+            float totalSpaceWitdh = gridWidth - totalCellWidth;
+
+            float spaceWidth = totalSpaceWitdh / ((float)widthProp.intValue + 1);
+
+            float curY = area.y;
+            for (int y = 0; y < currentChunk.height; y++)
             {
-                curX += spaceWidth;
+                curY += spaceWidth;
 
-                Rect rect = new Rect(curX, curY, cellWidth, cellWidth);
-                curX += cellWidth;
-
-                int tileIndex = y * currentChunk.height + x;
-
-                //Utilisateur peint
-                bool isPaintingOverThis = isClicking && rect.Contains(mousePos);
-                //TODO
-                if (isPaintingOverThis)
+                float curX = area.x;
+                for (int x = 0; x < currentChunk.width; x++)
                 {
-                    gridProp.GetArrayElementAtIndex(tileIndex).enumValueIndex = currentTileType.enumValueIndex;
-                    Debug.Log("The tile : " + x + " "+ y + " " +
-                        "in rect "+ rect + "have value changed" +
-                        " at pose " + mousePos);
+                    curX += spaceWidth;
+
+                    Rect rect = new Rect(curX, curY, cellWidth, cellWidth);
+                    curX += cellWidth;
+
+                    int tileIndex = y * currentChunk.height + x;
+
+                    //Utilisateur peint
+                    bool isPaintingOverThis = false;
+                    if (mousePos.x > area.x && mousePos.x < area.x + area.width && mousePos.y > area.y && mousePos.y < area.y + area.height)
+                    {
+                        if (mousePos.x > rect.x && mousePos.x < rect.x + rect.width && mousePos.y > rect.y && mousePos.y < rect.y + rect.height)
+                        {
+                            if (isClicking)
+                            {
+                                isPaintingOverThis = true;
+                            }
+                        }
+                    }
+                    //TODO
+                    if (isPaintingOverThis)
+                    {
+                        gridProp.GetArrayElementAtIndex(tileIndex).enumValueIndex = currentTileType.enumValueIndex;
+
+                        EditorGUI.DrawRect(rect, Color.red);
+                        EditorGUI.DrawRect(new Rect(mousePos.x, mousePos.y, 10, 10), Color.yellow);
+
+                        /*Debug.Log("The tile : " + x + " " + y + " " +
+                            "in rect " + rect + "have value changed" +
+                            " at pose " + mousePos);*/
+                    }
+
+                    //Draw tile
+                    int enumIndexPalette = gridProp.GetArrayElementAtIndex(tileIndex).enumValueIndex;
+                    Color rendColor = tileColorProp.GetArrayElementAtIndex(enumIndexPalette).colorValue;
+                    EditorGUI.DrawRect(rect, rendColor);
+                    EditorGUI.LabelField(rect, "Pos" + rect.x + "/" + rect.y + "\n Size" + rect.width + "/" + rect.height);
+
                 }
-
-                //Draw tile
-                int enumIndexPalette = gridProp.GetArrayElementAtIndex(tileIndex).enumValueIndex;
-                Color rendColor = tileColorProp.GetArrayElementAtIndex(enumIndexPalette).colorValue;
-                EditorGUI.DrawRect(rect, rendColor);
-                EditorGUI.TextArea(rect, "Pos"+ rect.x + "/" + rect.y + "\n Size" + rect.width + "/" + rect.height);
-
+                curY += cellWidth;
+                GUILayout.Space(5);
             }
-            curY += cellWidth;
-            curY += spaceWidth;
-            GUILayout.Space(5);
+            #endregion
         }
-        #endregion
+
+        if (GUILayout.Button("Update Array Size", EditorStyles.miniButton))
+        {
+            gridProp.arraySize = widthProp.intValue * heightProp.intValue;
+        }
 
         Repaint();
         serializedObject.ApplyModifiedProperties();

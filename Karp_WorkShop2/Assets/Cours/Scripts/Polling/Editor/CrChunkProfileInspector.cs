@@ -45,8 +45,8 @@ public class CrChunkProfileInspector : Editor
     private void OpenWindow()
     {
         //Dock to Inspector
-
         CourChunckProfileEditorWindow myWindow;
+
         if (!EditorWindow.HasOpenInstances<CourChunckProfileEditorWindow>())
         {
             Type inspectorType = Type.GetType("UnityEditor.InspectorWindow,UnityEditor.dll");
@@ -56,7 +56,7 @@ public class CrChunkProfileInspector : Editor
         {
             myWindow = EditorWindow.GetWindow(typeof(CourChunckProfileEditorWindow)) as CourChunckProfileEditorWindow;
         }
-        
+
         myWindow.InitWindow(target as CrChunkProfile);
         myWindow.Show();
     }
