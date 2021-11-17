@@ -127,7 +127,6 @@ public class CourChunckProfileEditorWindow : EditorWindow
                             }
                         }
                     }
-                    //TODO
                     if (isPaintingOverThis)
                     {
                         gridProp.GetArrayElementAtIndex(tileIndex).enumValueIndex = currentTileType.enumValueIndex;

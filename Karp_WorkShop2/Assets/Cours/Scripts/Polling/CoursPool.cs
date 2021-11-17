@@ -23,7 +23,8 @@ public class CoursPool : MonoBehaviour
         bool inRange = false;
         for (int i = 0; i < activeChunks.Count; i++)
         {
-            if (Mathf.Abs((activeChunks[i].transform.position - self.position).z) < 10)
+            Vector3 toChunk = activeChunks[i].transform.position - self.position;
+            if (Mathf.Abs(toChunk.z) < 10)
             {
                 inRange = true;
             }
@@ -36,7 +37,7 @@ public class CoursPool : MonoBehaviour
         //Check Out
         for (int i = 0; i < activeChunks.Count; i++)
         {
-            if (activeChunks[i].transform.position.z > 10)
+            if (activeChunks[i].transform.position.z < - 10)
             {
                 EndChunk(activeChunks[i]);
             }

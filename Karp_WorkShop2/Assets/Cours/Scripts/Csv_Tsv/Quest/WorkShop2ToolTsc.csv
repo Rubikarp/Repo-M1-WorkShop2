@@ -1,0 +1,14 @@
+index	Nom Quête	Intitulé complet	Valeur challenge	Valeur reward	type reward
+0	Tomate	Parcours $amout mètre	30	100	Score
+1	Carotte	Tue $amout ennemie	4	200	Pièces
+2	Tomate	Parcours $amout  mètre	60	300	Score
+3	Carotte	Tue $amout ennemie	4	400	Pièces
+4	Tomate	Parcours $amout mètre	60	500	Score
+5	Carotte	Tue $amout ennemie	4	600	Pièces
+6	Tomate	Parcours $amout mètre	60	700	Score
+7	Carotte	Tue $amout ennemie	4	800	Pièces
+8	Tomate	Parcours $amout mètre	60	900	Exp
+9	Carotte	Tue $amout ennemie	4	1000	Pièces
+10	Tomate	Parcours $amout mètre	60	1100	Score
+11	Carotte	Tue $amout ennemie	4	1200	Pièces
+12	Tomate	Tue $amout ennemie	4	1200	Pièces

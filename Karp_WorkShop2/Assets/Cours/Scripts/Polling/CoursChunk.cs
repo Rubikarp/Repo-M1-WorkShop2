@@ -32,6 +32,6 @@ public class CoursChunk : MonoBehaviour
 
     private void Update()
     {
-        self.Translate(Vector3.forward * scrollSpeed * Time.deltaTime);
+        self.Translate(Vector3.back * scrollSpeed * Time.deltaTime);
     }
 }
