@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-/*[CustomEditor(typeof(SimpleRuntimeScript)), */[CanEditMultipleObjects]
+[CanEditMultipleObjects]
+/*[CustomEditor(typeof(SimpleRuntimeScript)), */
 public class SimpleRuntimeScriptSlagInspector : Editor
 {
     bool once = false;

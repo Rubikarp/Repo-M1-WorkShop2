@@ -44,7 +44,7 @@ public class CourChunckProfileEditorWindow : EditorWindow
         using (var check = new EditorGUI.DisabledGroupScope(true))
         {
             EditorGUILayout.ObjectField("Current Chunk", currentChunk, typeof(CrChunkProfile));
-            
+
             EditorGUILayout.Space();
 
             EditorGUILayout.Vector2Field("Debug", Event.current.mousePosition);
@@ -56,7 +56,7 @@ public class CourChunckProfileEditorWindow : EditorWindow
             EditorGUILayout.PropertyField(currentTileType);
         }
 
-        EditorGUILayout.Space(); 
+        EditorGUILayout.Space();
 
         EditorGUILayout.PropertyField(tileColorProp);
 
@@ -70,23 +70,25 @@ public class CourChunckProfileEditorWindow : EditorWindow
             EditorUtility.SetDirty(currentChunk);
         }
 
-        if (GUILayout.Button("Update Array Size", EditorStyles.miniButton))
-        {
-            gridProp.arraySize = widthProp.intValue * heightProp.intValue;
-        }
-
-
         EditorGUILayout.Space();
 
         float totalWidth = EditorGUIUtility.currentViewWidth;
         float gridWidth = totalWidth * (1f - 2f * marginRatio);
+
+        //GUI is call 2 time per frame and is null on the second frame
         Rect nextRect = EditorGUILayout.GetControlRect();
+        //if (nextRect.y == 0)
+        ///{ return; }
 
         Rect area = new Rect(nextRect.x + totalWidth * marginRatio, nextRect.y, gridWidth, gridWidth);
-        EditorGUI.DrawRect(area, new Color(0.5f,0.5f,0.5f, 0.2f));
+        EditorGUI.DrawRect(area, new Color(0.5f, 0.5f, 0.5f, 0.2f));
 
         if (currentChunk.width < 0) return;
         if (currentChunk.height < 0) return;
+        if(gridProp.arraySize != widthProp.intValue * heightProp.intValue)
+        {
+            gridProp.arraySize = widthProp.intValue * heightProp.intValue;
+        }
 
         using (new GUILayout.VerticalScope(GUILayout.Height(area.height), GUILayout.Width(area.height)))
         {
@@ -117,9 +119,9 @@ public class CourChunckProfileEditorWindow : EditorWindow
 
                     //Utilisateur peint
                     bool isPaintingOverThis = false;
-                    if (mousePos.x > area.x && mousePos.x < area.x + area.width && mousePos.y > area.y && mousePos.y < area.y + area.height)
+                    if (nextRect.y != 0)
                     {
-                        if (mousePos.x > rect.x && mousePos.x < rect.x + rect.width && mousePos.y > rect.y && mousePos.y < rect.y + rect.height)
+                        if (rect.Contains(mousePos))
                         {
                             if (isClicking)
                             {
@@ -152,7 +154,7 @@ public class CourChunckProfileEditorWindow : EditorWindow
             #endregion
         }
 
-        if (GUILayout.Button("Update Array Size", EditorStyles.miniButton))
+        if (GUILayout.Button("Update Array Size Manually", EditorStyles.miniButton))
         {
             gridProp.arraySize = widthProp.intValue * heightProp.intValue;
         }

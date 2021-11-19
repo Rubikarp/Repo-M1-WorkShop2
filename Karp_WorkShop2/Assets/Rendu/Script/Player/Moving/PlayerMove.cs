@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerMove : MonoBehaviour
 {
     public InputHandler input;
-    public MoveArea2D moveArea;
+    public Area2D moveArea;
     public Transform self;
 
     [Header("Parameters")]
