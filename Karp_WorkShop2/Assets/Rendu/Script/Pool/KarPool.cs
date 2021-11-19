@@ -1,48 +1,69 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
-public class KarPool<T> where T : MonoBehaviour ,IPoolable
+namespace Core.Gameplay
 {
-    public List<T> members = new List<T>();
-    public List<T> unavailableMembers = new List<T>();
+    public class ChunkEvent : UnityEvent<Chunk>
+    { }
 
-    GameObject prefab;
-
-    private T CreateNewMember()
+    public class KarPool
     {
-        GameObject go = GameObject.Instantiate(prefab) as GameObject;
+        public List<Chunk> members = new List<Chunk>();
+        public List<Chunk> availableMembers = new List<Chunk>();
+        public List<Chunk> unavailableMembers = new List<Chunk>();
 
-        T member = go.GetComponent<T>();
-        if (!member)
+        GameObject prefab;
+
+        public ChunkEvent onPoolInitialise;
+        public ChunkEvent onPoolReset;
+        private Chunk CreateNewMember()
         {
-            go.AddComponent<T>(); ;
-            member = go.GetComponent<T>();
-        }
+            GameObject go = GameObject.Instantiate(prefab) as GameObject;
 
-        members.Add(member);
-        return member;
-    }
-
-    public T GetFreeMember()
-    {
-        for (int i = 0; i < members.Count; i++)
-        {
-            if (!unavailableMembers.Contains(members[i]))
+            Chunk member = go.GetComponent<Chunk>();
+            if (!member)
             {
-                unavailableMembers.Add(members[i]);
-                return members[i];
+                go.AddComponent<Chunk>(); ;
+                member = go.GetComponent<Chunk>();
             }
+
+            members.Add(member);
+            return member;
         }
-        T newMembers = CreateNewMember();
-        unavailableMembers.Add(newMembers);
-        return newMembers;
-    }
 
-    public void FreeMember(T member)
-    {
-        member.PoolReset();
-        unavailableMembers.Remove(member);
-    }
+        public Chunk GetFreeMember()
+        {
+            for (int i = 0; i < members.Count; i++)
+            {
+                if (availableMembers.Contains(members[i]))
+                {
+                    availableMembers.Remove(members[i]);
+                    unavailableMembers.Add(members[i]);
 
+                    onPoolInitialise?.Invoke(members[i]);
+
+                    return members[i];
+                }
+            }
+            Chunk newMembers = CreateNewMember();
+
+            availableMembers.Remove(newMembers);
+            unavailableMembers.Add(newMembers);
+
+            onPoolInitialise?.Invoke(newMembers);
+
+            return newMembers;
+        }
+
+        public void FreeMember(Chunk member)
+        {
+            availableMembers.Add(member);
+            unavailableMembers.Remove(member);
+
+            onPoolReset?.Invoke(member);
+        }
+
+    }
 }

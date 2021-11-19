@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShootTest : MonoBehaviour
+public class PlayerShoot : MonoBehaviour
 {
-    public Transform head;
+        public Transform head;
     public Camera cam;
 
     RaycastHit hit;
@@ -23,9 +23,11 @@ public class ShootTest : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit))
             {
-                Debug.DrawLine(head.position, hit.point, Color.red);
+                if (hit.point != null)
+                {
+                    Debug.DrawLine(head.position, hit.point, Color.red);
+                }
             }
-
         }
     }
 }

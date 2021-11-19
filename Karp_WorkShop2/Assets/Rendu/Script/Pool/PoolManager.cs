@@ -2,17 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PoolManager : MonoBehaviour
+namespace Core.Gameplay
 {
-    //public KarPool<CoursChunk> pool = new KarPool<CoursChunk>();
-
-    void Start()
+    public class PoolManager : MonoBehaviour
     {
-        
-    }
+        public KarPool pool = new KarPool();
 
-    void Update()
-    {
-        
+        public float poolElementScrollSpeed = 5f;
+        public Vector3 poolElementScrollDir = Vector3.back;
+
+        public float chunkSize = 10f;
+        public float outPos = -10f;
+
+        void Start()
+        {
+
+        }
+
+        void Update()
+        {
+
+        }
     }
 }
