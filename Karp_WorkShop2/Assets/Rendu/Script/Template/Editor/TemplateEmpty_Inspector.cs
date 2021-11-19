@@ -5,7 +5,7 @@ using UnityEditor;
 
 //[CanEditMultipleObjects]
 //[CustomEditor(typeof(Template))]
-public class Template_Inspector : Editor
+public class TemplateEmpty_Inspector : Editor
 {
 
     // Start like

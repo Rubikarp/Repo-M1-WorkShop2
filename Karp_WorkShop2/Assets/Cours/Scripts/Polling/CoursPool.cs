@@ -10,28 +10,41 @@ public class CoursPool : MonoBehaviour
     public GameObject chunkPrefab;
     public Transform self;
 
+    CoursChunk lastChunk;
+    Vector3 spawnPos;
+    public float chunkSize = 10;
+    public float zLimit = -10;
+
 #if UNITY_EDITOR
     public bool foldout;
     public int poolSize;
 
 #endif
 
+    private void Start()
+    {
+        for (float i = 0; i < self.position.z - zLimit; i += chunkSize)
+        {
+            Vector3 _spawnPos = Vector3.back * i;
+            SendNewChunk(_spawnPos);
+        }
+    }
+
     private void Update()
     {
 
         //Check in
         bool inRange = false;
-        for (int i = 0; i < activeChunks.Count; i++)
+        Vector3 toChunk = lastChunk.transform.position - self.position;
+        if (Mathf.Abs(toChunk.z) < self.position.z - chunkSize)
         {
-            Vector3 toChunk = activeChunks[i].transform.position - self.position;
-            if (Mathf.Abs(toChunk.z) < 10)
-            {
-                inRange = true;
-            }
+            spawnPos = lastChunk.transform.position - toChunk.normalized * chunkSize;
+            inRange = true;
         }
         if (!inRange)
         {
-            SendNewChunk();
+            SendNewChunk(spawnPos);
+            inRange = false;
         }
 
         //Check Out
@@ -44,18 +57,18 @@ public class CoursPool : MonoBehaviour
         }
     }
 
-    public void SendNewChunk()
+    public void SendNewChunk(Vector3 pos)
     {
         CoursChunk ch = GetFreeChunk();
         activeChunks.Add(ch);
-        ch.StartMoving();
+        lastChunk = ch;
+        ch.StartMoving(pos);
     }
     public void EndChunk(CoursChunk chunk)
     {
         activeChunks.Remove(chunk);
         chunk.StopMoving();
     }
-
 
     public CoursChunk GetFreeChunk()
     {
@@ -70,7 +83,6 @@ public class CoursPool : MonoBehaviour
 
         return ExtendPool();
     }
-
     public CoursChunk ExtendPool()
     {
         GameObject go = Instantiate(chunkPrefab, self);

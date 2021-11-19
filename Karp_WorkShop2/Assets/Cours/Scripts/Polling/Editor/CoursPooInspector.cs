@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-[CanEditMultipleObjects]
 [CustomEditor(typeof(CoursPool))]
 public class CoursPoolInspector : Editor
 {

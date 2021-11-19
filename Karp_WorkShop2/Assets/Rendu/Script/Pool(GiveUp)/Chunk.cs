@@ -12,9 +12,6 @@ namespace Core.Gameplay
         public float scrollSpeed = 5f;
         public Vector3 scrollDir  = Vector3.back;
 
-        [Header("Data")]
-        public GameGrid grid;
-
         public void Awake()
         {
             enabled = false;

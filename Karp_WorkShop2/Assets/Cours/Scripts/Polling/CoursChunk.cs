@@ -11,23 +11,22 @@ public class CoursChunk : MonoBehaviour
 
     public void Awake()
     {
-        enabled = false;
+        StopMoving();
     }
 
     public void loadProfile(CrChunkProfile profile)
     {
 
     }
-    public void StartMoving()
+    public void StartMoving(Vector3 pos)
     {
-        self.localPosition = Vector3.zero;
-        enabled = true;
+        self.localPosition = pos;
+        gameObject.SetActive(true);
     }
 
     public void StopMoving()
     {
-        self.localPosition = Vector3.zero;
-        enabled = false;
+        gameObject.SetActive(false);
     }
 
     private void Update()
