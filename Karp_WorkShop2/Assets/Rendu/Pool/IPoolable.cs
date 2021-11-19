@@ -4,5 +4,6 @@ using UnityEngine;
 
 public interface IPoolable
 {
+    public void PoolInit();
     public void PoolReset();
 }

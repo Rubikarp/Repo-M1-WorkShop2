@@ -8,7 +8,7 @@ public class KarPool<T> where T : MonoBehaviour ,IPoolable
     public List<T> unavailableMembers = new List<T>();
 
     GameObject prefab;
-
+    
     private T CreateNewMember()
     {
         GameObject go = GameObject.Instantiate(prefab) as GameObject;
@@ -31,11 +31,18 @@ public class KarPool<T> where T : MonoBehaviour ,IPoolable
             if (!unavailableMembers.Contains(members[i]))
             {
                 unavailableMembers.Add(members[i]);
+
+                members[i].PoolInit();
+
                 return members[i];
             }
         }
         T newMembers = CreateNewMember();
+
         unavailableMembers.Add(newMembers);
+
+        newMembers.PoolInit();
+
         return newMembers;
     }
 
