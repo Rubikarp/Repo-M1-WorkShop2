@@ -87,7 +87,7 @@ public class RunTimePtahInspector : Editor
         //rList.DoList();
 
         //EditorGUILayout.PropertyField(waypoints);
-        //EditorGUILayout.PropertyField(radius);
+        EditorGUILayout.PropertyField(radius);
 
         //target recois serializedObject values (comprend le set dirty et le 
         serializedObject.ApplyModifiedProperties();

@@ -1,26 +1,71 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.AnimatedValues;
-using UnityEngine;
+using UnityEditorInternal;
 using UnityEditor;
+using UnityEngine;
+
 
 //[CanEditMultipleObjects]
 //[CustomEditor(typeof(Template))]
 public class Template_Inspector : Editor
 {
     SerializedProperty prop;
-
+    ReorderableList allChunk;
 
     // Start like
     private void OnEnable()
     {
         //Link variables to property
         //prop = serializedObject.FindProperty(nameof(Script.prop));
-
+        #region reordable list
+        //Initialise la liste
+        allChunk = new ReorderableList(serializedObject, prop, true, true, true, true);
+        //linker à une serielizedProperty (une collection, array, liste,etc)
+        //Preparer les callbacks
+        allChunk.drawElementCallback += ElementDrawer;
+        allChunk.drawHeaderCallback += HeaderDrawer;
+        allChunk.onAddCallback += AddCallBack;
+        allChunk.onAddDropdownCallback += AddDropDownCallBack;
+        allChunk.onRemoveCallback += RemoveCallBack;
+        allChunk.onReorderCallback += ReorderCallback;
+        allChunk.elementHeightCallback += ElementHeightCallBack;
     }
 
-    // Update like
-    public override void OnInspectorGUI()
+
+    void HeaderDrawer(Rect rect)
+    {
+        EditorGUI.LabelField(rect, "Titre de la liste");
+    }
+    void ElementDrawer(Rect rect, int index, bool isActive, bool isFocused)
+    {
+        EditorGUI.PropertyField(rect, prop.GetArrayElementAtIndex(index));
+    }
+    void AddCallBack(ReorderableList rList)
+    {
+
+    }
+    private void AddDropDownCallBack(Rect buttonRect, ReorderableList list)
+    {
+
+    }
+    void RemoveCallBack(ReorderableList rList)
+    {
+        prop.DeleteArrayElementAtIndex(rList.index);
+    }
+    void ReorderCallback(ReorderableList rList)
+    {
+
+    }
+    float ElementHeightCallBack(int index)
+    {
+        float numberOfLine = EditorGUIUtility.currentViewWidth < 334 ? 2 : 1;
+        return (EditorGUIUtility.singleLineHeight * numberOfLine) + 1;
+    }
+    #endregion
+
+// Update like
+public override void OnInspectorGUI()
     {
         #region Scope
         //Button
@@ -87,15 +132,16 @@ public class Template_Inspector : Editor
         #endregion
 
         //Space
-        GUILayout.Space(15);
+        GUILayout.Space(2);
+        GUILayout.Space(EditorGUIUtility.singleLineHeight);
 
         #region Shlag
-        
+
         // Les fields
         ///https://docs.unity3d.com/ScriptReference/EditorGUILayout.html
         //Object Tricks
         ///script.someRef = EditorGUILayout.ObjectField("someTransform", script.someRef, typeof(Transform), true) as Transform;
-        
+
         //Save
         EditorUtility.SetDirty(target);
         #endregion

@@ -2,18 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEditor;
 
 namespace Rendu
 {
     public class PoolSystem : MonoBehaviour
     {
-        public List<Chunk> allChunk
-        {
-            get
-            {
-                return  avaibleChunk.Union(unavaibleChunk).ToList();
-            }
-        }
+        public List<GameObject> allChunk;
         public List<Chunk> avaibleChunk;
         public List<Chunk> unavaibleChunk;
         Chunk lastChunkLauch;
@@ -83,6 +78,7 @@ namespace Rendu
         public Chunk ExtendPool()
         {
             GameObject go = Instantiate(chunkPrefabs[Random.Range(0, chunkPrefabs.Length - 1)], self);
+            allChunk.Add(go);
             Chunk ch = go.GetComponent<Chunk>();
             if (ch)
             {
@@ -96,5 +92,30 @@ namespace Rendu
                 return ch;
             }
         }
+#if UNITY_EDITOR
+        public void ExtendPoolChunk(GameObject prefab)
+        {
+            GameObject go = PrefabUtility.InstantiatePrefab((Object)prefab, self.transform) as GameObject;
+            allChunk.Add(go);
+            Chunk ch = go.GetComponent<Chunk>();
+            if (!ch)
+            {
+                go.AddComponent<Chunk>(); ;
+                ch = go.GetComponent<Chunk>();
+            }
+        }
+        public void ExtendPoolChunkRandomly()
+        {
+            GameObject go = PrefabUtility.InstantiatePrefab((Object)chunkPrefabs[Random.Range(0, chunkPrefabs.Length - 1)], self.transform) as GameObject;
+            allChunk.Add(go);
+            Chunk ch = go.GetComponent<Chunk>();
+            if (!ch)
+            {
+                go.AddComponent<Chunk>(); ;
+                ch = go.GetComponent<Chunk>();
+            }
+        }
+#endif
+
     }
 }
