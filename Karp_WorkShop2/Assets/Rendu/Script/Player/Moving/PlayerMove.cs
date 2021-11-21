@@ -1,12 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class PlayerMove : MonoBehaviour
 {
     public InputHandler input;
     public Area2D moveArea;
     public Transform self;
+
+    [Header("Event")]
+    public UnityEvent endGame;
 
     [Header("Parameters")]
     public float runSpeed = 10;
@@ -29,7 +33,7 @@ public class PlayerMove : MonoBehaviour
         self.position = moveArea.ClampIn(self.position);
 
         //MOVE
-        if (moveDir == Vector3.zero)
+        if (moveDir.magnitude < 0.2f)
         {
             accTime = 0f;
             return;
@@ -52,5 +56,13 @@ public class PlayerMove : MonoBehaviour
 
         //Save last fr value
         lastDir = moveDir;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag.Equals("Obstacle"))
+        {
+            endGame?.Invoke();
+        }
     }
 }

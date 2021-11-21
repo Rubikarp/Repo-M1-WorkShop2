@@ -83,6 +83,7 @@ public class PoolSystemInspector : Editor
     void AddCallBack(ReorderableList rList)
     {
         allChunkProp.arraySize++;
+        AddRandomChunk();
     }
     private void AddDropDownCallBack(Rect buttonRect, ReorderableList list)
     {
@@ -223,8 +224,14 @@ public class PoolSystemInspector : Editor
                         ///
                         GUILayout.Label("Behavior", sectionStyle);
                         EditorGUILayout.PropertyField(scrollSpeedProp);
-                        EditorGUILayout.PropertyField(scrollDirProp);
-                        scrollDirProp.vector3Value = scrollDirProp.vector3Value.normalized;
+                        using (new GUILayout.HorizontalScope())
+                        {
+                            EditorGUILayout.PropertyField(scrollDirProp);
+                            if (GUILayout.Button(new GUIContent("Normalise", "")))
+                            {
+                                scrollDirProp.vector3Value = scrollDirProp.vector3Value.normalized;
+                            }
+                        }
                     }
                 }
             }
@@ -299,6 +306,11 @@ public class PoolSystemInspector : Editor
 
     void AddRandomChunk()
     {
+        serializedObject.Update();
+
+        self.ExtendPoolChunkRandomly();
+
+        serializedObject.ApplyModifiedProperties();
 
     }
     void AddChunk(object arg)

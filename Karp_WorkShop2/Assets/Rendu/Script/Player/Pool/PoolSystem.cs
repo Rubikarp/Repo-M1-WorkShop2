@@ -30,12 +30,20 @@ namespace Rendu
 
         private void Start()
         {
+            for (int i = 0; i < allChunk.Count; i++)
+            {
+                avaibleChunk.Add(allChunk[i].GetComponent<Chunk>());
+            }
+
+            /*
             Vector3 toLimit = self.position - limit.transform.position;
             for (float i = Mathf.CeilToInt(toLimit.magnitude / chunkSize); i > 0; i --)
             {
                 Vector3 _spawnPos = self.position + (-toLimit.normalized * chunkSize * i);
                 ChunkLaunch(_spawnPos);
-            }
+            }*/
+            ChunkLaunch(self.position);
+
         }
         private void Update()
         {
