@@ -73,7 +73,7 @@ public class PoolSystemInspector : Editor
 
     void HeaderDrawer(Rect rect)
     {
-        EditorGUI.LabelField(rect, "GameChunk");
+        EditorGUI.LabelField(rect, "Chunk load");
     }
     void ElementDrawer(Rect rect, int index, bool isActive, bool isFocused)
     {
@@ -170,7 +170,7 @@ public class PoolSystemInspector : Editor
                 //Status
                 using (new GUILayout.VerticalScope(EditorStyles.helpBox))
                 {
-                    GUILayout.Label("Status", subTitleStyle);
+                    GUILayout.Label("Statuts", subTitleStyle);
                     using (new GUILayout.HorizontalScope(EditorStyles.helpBox))
                     {
                         GUILayout.Label(new GUIContent(self.unavaibleChunk.Count.ToString() + "/" + allChunkCount.ToString(), " "), centerStyle);
